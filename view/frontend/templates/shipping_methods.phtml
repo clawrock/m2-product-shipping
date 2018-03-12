@@ -1,0 +1,36 @@
+<?php
+$product = $block->getProduct();
+if (!$product->getIsSalable() || $product->isVirtual()) {
+    return false;
+}
+
+?>
+<div class="clawrock-productshipping"
+     data-mage-init='{"ClawRock_ProductShipping/js/shipping-methods": {
+        "url": "<?php echo $block->escapeHtml($block->getShippingMethodsUrl()); ?>",
+        "sku": "<?php echo $block->escapeHtml($product->getSku()); ?>",
+        "type": "<?php echo $block->escapeHtml($product->getTypeId()); ?>",
+        "message": "<?php echo $block->escapeHtml($block->getCustomMessage()); ?>"
+    }}'>
+    <h3>Shipping methods:</h3>
+    <div id="clawrock-shipping-methods">
+        <ul>
+            <?php
+            $shippingMethods = $block->getShippingMethods($block->getDefaultOptions());
+            if (count($shippingMethods) > 0) : ?>
+                <?php foreach ($shippingMethods as $method) : ?>
+                    <li>
+                        <?php echo $block->escapeHtml($method['title']); ?>: <span><?php echo $block->escapeHtml($method['price']); ?></span>
+                    </li>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p><?php echo $block->escapeHtml($block->getCustomMessage()); ?></p>
+            <?php endif; ?>
+        </ul>
+    </div>
+</div>
+<script id="shipping-methods-template" type="text/x-magento-template">
+    <li>
+        <%- data.title %>: <span><%- data.price %></span>
+    </li>
+</script>

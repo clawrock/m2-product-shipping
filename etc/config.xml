@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <clawrock_productshipping>
+            <general>
+                <enabled>1</enabled>
+                <custom_message>Shipping methods not found.</custom_message>
+                <options_custom_message>Please select options.</options_custom_message>
+            </general>
+        </clawrock_productshipping>
+    </default>
+</config>

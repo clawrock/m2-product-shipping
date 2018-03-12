@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./vendor/autoload.php">
+    <testsuite name="ClawRock_ProductShipping Unit Tests">
+        <directory suffix="Test.php">Test/Unit</directory>
+    </testsuite>
+    <filter>
+        <whitelist addUncoveredFilesFromWhiteList="true">
+            <directory suffix=".php">Block</directory>
+            <directory suffix=".php">Helper</directory>
+            <directory suffix=".php">Model</directory>
+            <exclude>
+                <directory>Api</directory>
+                <directory>Exception</directory>
+                <directory>Test</directory>
+                <file>registration.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
