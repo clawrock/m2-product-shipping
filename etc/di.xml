@@ -2,4 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="ClawRock\ProductShipping\Api\ShippingMethodsInterface"
                 type="ClawRock\ProductShipping\Model\ShippingMethods" />
+
+    <type name="Magento\Tax\Model\Sales\Total\Quote\Subtotal">
+        <plugin name="ClawRock_ProductSipping::addBaseSubtotal"
+                type="ClawRock\ProductShipping\Plugin\AddSubtotalPlugin" />
+    </type>
 </config>

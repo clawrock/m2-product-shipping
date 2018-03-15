@@ -192,6 +192,9 @@ class ShippingMethodsTest extends TestCase
         $this->urlInterfaceMock->expects($this->once())->method('getUrl')
             ->with('rest/V1/product-shipping-methods')
             ->willReturn('http://magento.com/rest/V1/product-shipping-methods');
-        $this->assertEquals('http://magento.com/rest/V1/product-shipping-methods', $this->block->getShippingMethodsUrl());
+        $this->assertEquals(
+            'http://magento.com/rest/V1/product-shipping-methods',
+            $this->block->getShippingMethodsUrl()
+        );
     }
 }

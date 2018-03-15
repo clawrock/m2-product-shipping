@@ -1,5 +1,5 @@
 {
-    "name": "clawrock/productshipping-module",
+    "name": "clawrock/m2-product-shipping",
     "description": "Module is responsible for displaying shipping methods on product view page.",
     "type": "magento2-module",
     "version": "1.0.0",
@@ -8,14 +8,15 @@
         "AFL-3.0"
     ],
     "require": {
-        "magento/framework": ">=101.0.2",
-        "magento/zendframework1": "^1.13",
-        "magento/module-catalog": ">=102.0.2",
-        "magento/module-bundle": ">=100.2.2",
-        "magento/module-quote": ">=101.0.2",
-        "magento/module-swatches": ">=100.2.1",
-        "magento/module-configurable-product": ">=100.2.2",
-        "magento/module-directory": ">=100.2.1"
+        "magento/framework": ">=100.1",
+        "magento/zendframework1": "^1.12",
+        "magento/module-catalog": ">=101.0",
+        "magento/module-bundle": ">=100.1",
+        "magento/module-quote": ">=100.1",
+        "magento/module-swatches": ">=100.1",
+        "magento/module-configurable-product": ">=100.1",
+        "magento/module-directory": ">=100.1",
+        "magento/module-tax": ">=100.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.2.0"

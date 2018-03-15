@@ -25,28 +25,44 @@ define([
                 if (!$(e.currentTarget).data('bundle-initialized')) {
                     return;
                 }
+                self.abortCurrentRequest();
                 self.fetch(self.prepareBundleRequest());
             });
-
+            $(document).ready(function(){
+                self.getShippingMethods();
+            });
             $(document).on('click', this.options.configurableSwatchOption, function(e) {
+                self.abortCurrentRequest();
                 self.fetch(self.prepareConfigurableRequest());
             });
 
             $(this.options.configurableSelector).on('change', function(e) {
+                self.abortCurrentRequest();
                 self.fetch(self.prepareConfigurableRequest());
             });
 
             $(this.options.qtyFieldSelector+', '+this.options.defaultQtySelector).on('change', function(e) {
-                if (self.options.type == 'bundle') {
-                    self.fetch(self.prepareBundleRequest());
-                    return;
-                }
-                if (self.options.type == 'configurable') {
-                    self.fetch(self.prepareConfigurableRequest());
-                    return;
-                }
-                self.fetch(self.defaultRequestData({}));
+                self.abortCurrentRequest();
+                self.getShippingMethods();
             });
+        },
+
+        abortCurrentRequest: function() {
+            if (this.currentRequest) {
+                this.currentRequest.abort();
+            }
+        },
+
+        getShippingMethods: function() {
+            if (this.options.type == 'bundle') {
+                this.fetch(this.prepareBundleRequest());
+                return;
+            }
+            if (this.options.type == 'configurable') {
+                this.fetch(this.prepareConfigurableRequest());
+                return;
+            }
+            this.fetch(this.defaultRequestData({}));
         },
 
         prepareConfigurableRequest: function() {
@@ -104,18 +120,20 @@ define([
         },
 
         fetch: function(data) {
-            $.ajax({
+            this.currentRequest = $.ajax({
                 url: this.options.url,
                 method: 'POST',
                 data: JSON.stringify(data),
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 showLoader: true,
+                loaderContext: '.clawrock-productshipping',
                 success: this.renderShippingMethods.bind(this)
             });
         },
 
         renderShippingMethods: function(response) {
+            this.currentRequest = null;
             var template = mageTemplate('#shipping-methods-template'),
                 $shippingMethods = $('#clawrock-shipping-methods ul');
 
