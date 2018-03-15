@@ -4,6 +4,7 @@ namespace ClawRock\ProductShipping\Model;
 
 use ClawRock\ProductShipping\Api\ShippingMethodsInterface;
 use ClawRock\ProductShipping\Exception\RequiredOptionsException;
+use ClawRock\ProductShipping\Model\Config\Source\SortOrder;
 use Magento\Framework\DataObject;
 use Magento\Framework\Phrase;
 
@@ -77,6 +78,22 @@ class ShippingMethods implements ShippingMethodsInterface
     }
 
     /**
+     * @return string
+     */
+    public function getSortOrder()
+    {
+        return $this->config->getShippingMethodsSortOrder();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostcode()
+    {
+        return $this->config->getPostcode();
+    }
+
+    /**
      * @param  string $sku
      * @return \Magento\Catalog\Model\Product
      */
@@ -111,6 +128,7 @@ class ShippingMethods implements ShippingMethodsInterface
 
         $quote->addProduct($this->product, $params);
         $quote->getShippingAddress()->setCountryId($this->getCountryCode());
+        $quote->getShippingAddress()->setPostcode($this->getPostcode());
 
         $shippingAddress = $quote->getShippingAddress();
         $shippingAddress->setCollectShippingRates(true);
@@ -119,14 +137,23 @@ class ShippingMethods implements ShippingMethodsInterface
         $shippingRates = $shippingAddress->getGroupedAllShippingRates();
         foreach ($shippingRates as $carrierRates) {
             foreach ($carrierRates as $rate) {
-                /** @var \Magento\Quote\Model\Quote\Address\Rate $rate */
-                $output[] = [
-                    'title' => $rate->getMethodTitle(),
-                    'price' => $this->priceHelper->currency($rate->getPrice(), true, false)
-                ];
+                $methodTitle = $rate->getMethodTitle();
+                if ($methodTitle) {
+                    /** @var \Magento\Quote\Model\Quote\Address\Rate $rate */
+                    $output[] = [
+                        'title' => $methodTitle,
+                        'price' => $this->priceHelper->currency($rate->getPrice(), true, false)
+                    ];
+                }
             }
         }
-        asort($output);
+
+        if ($this->getSortOrder() === SortOrder::SORT_ASCENDING) {
+            sort($output);
+        } elseif ($this->getSortOrder() === SortOrder::SORT_DESCENDING) {
+            rsort($output);
+        }
+
         return $output;
     }
 

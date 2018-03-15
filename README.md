@@ -2,9 +2,16 @@
 
 Module is responsible for displaying available shipping methods for product view page using predefined country.
 
-## Installation
-1. Clone the repository
-2. Run from console `composer install`
+## Requirements
+1) Magento 2.1+
+
+## Installation (using composer)
+1. `composer require clawrock/m2-product-shipping`
+2. `php bin/magento setup:upgrade`
+
+## Installation (manually)
+1. Clone the repository to `app/code/ClawRock/ProductShipping`
+2. `php bin/magento setup:upgrade`
 
 ### Configuration
 1. Go to Stores -> Configuration -> ClawRock -> Product Shipping

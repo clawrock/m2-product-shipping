@@ -11,6 +11,8 @@ class Config extends AbstractHelper
     const CONFIG_COUNTRY_CODE = 'clawrock_productshipping/general/country_code';
     const CONFIG_CUSTOM_MESSAGE = 'clawrock_productshipping/general/custom_message';
     const CONFIG_OPTIONS_CUSTOM_MESSAGE = 'clawrock_productshipping/general/options_custom_message';
+    const CONFIG_METHODS_SORT_ORDER = 'clawrock_productshipping/general/sort_order';
+    const CONFIG_POSTCODE = 'clawrock_productshipping/general/postcode';
 
     /**
      * @param  null|string  $store
@@ -46,5 +48,23 @@ class Config extends AbstractHelper
     public function getOptionsCustomMessage($store = null)
     {
         return $this->scopeConfig->getValue(self::CONFIG_OPTIONS_CUSTOM_MESSAGE, ScopeInterface::SCOPE_STORE, $store);
+    }
+
+    /**
+     * @param  null|string $store
+     * @return string
+     */
+    public function getShippingMethodsSortOrder($store = null)
+    {
+        return $this->scopeConfig->getValue(self::CONFIG_METHODS_SORT_ORDER, ScopeInterface::SCOPE_STORE, $store);
+    }
+
+    /**
+     * @param  null|string $store
+     * @return string
+     */
+    public function getPostcode($store = null)
+    {
+        return $this->scopeConfig->getValue(self::CONFIG_POSTCODE, ScopeInterface::SCOPE_STORE, $store);
     }
 }

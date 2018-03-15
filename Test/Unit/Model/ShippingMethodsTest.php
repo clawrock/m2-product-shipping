@@ -4,6 +4,7 @@ namespace ClawRock\ProductShipping\Test\Unit\Model;
 
 use ClawRock\ProductShipping\Exception\RequiredOptionsException;
 use ClawRock\ProductShipping\Helper\Config;
+use ClawRock\ProductShipping\Model\Config\Source\SortOrder;
 use ClawRock\ProductShipping\Model\ShippingMethods;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
@@ -130,6 +131,14 @@ class ShippingMethodsTest extends TestCase
         $this->assertEquals('PL', $this->model->getCountryCode());
     }
 
+    public function testGetPostcode()
+    {
+        $this->configMock->expects($this->once())
+                         ->method('getPostcode')
+                         ->willReturn('9403');
+        $this->assertEquals('9403', $this->model->getPostcode());
+    }
+
     public function testGetProduct()
     {
         $this->productFactoryMock->expects($this->once())
@@ -146,7 +155,7 @@ class ShippingMethodsTest extends TestCase
         );
     }
 
-    public function testGetShippingMethods()
+    public function prepareShippingMethods()
     {
         $this->productFactoryMock->expects($this->once())
                                  ->method('create')
@@ -164,7 +173,7 @@ class ShippingMethodsTest extends TestCase
                                  ->method('create')
                                  ->willReturn($this->quoteMock);
 
-        $this->quoteMock->expects($this->exactly(2))
+        $this->quoteMock->expects($this->exactly(3))
                         ->method('getShippingAddress')
                         ->willReturn($this->shippingAddressMock);
 
@@ -177,6 +186,11 @@ class ShippingMethodsTest extends TestCase
                                   ->method('collectAddressTotals')
                                   ->with($this->quoteMock, $this->shippingAddressMock)
                                   ->willReturnSelf();
+    }
+
+    public function testGetShippingMethods()
+    {
+        $this->prepareShippingMethods();
 
         $this->priceHelperMock->expects($this->once())
                               ->method('currency')
@@ -204,6 +218,74 @@ class ShippingMethodsTest extends TestCase
         $carriersRates = $this->model->getShippingMethods(['sku' => 'simple', 'qty' => 1]);
 
         $this->assertEquals($expectedRates, $carriersRates);
+    }
+
+    public function testGetShippingMethodsAscending()
+    {
+        $this->prepareShippingMethods();
+
+        $this->priceHelperMock->expects($this->exactly(3))
+                              ->method('currency')
+                              ->willReturn('$0.00');
+
+        $this->shippingAddressMock->expects($this->any())
+            ->method('getGroupedAllShippingRates')
+            ->willReturn([$this->prepareRates()]);
+
+        $this->configMock->expects($this->any())
+                         ->method('getShippingMethodsSortOrder')
+                         ->willReturn(SortOrder::SORT_ASCENDING);
+
+        $expectedRates = [
+            ['title' => 'Free Shipping0', 'price' => '$0.00'],
+            ['title' => 'Free Shipping1', 'price' => '$0.00'],
+            ['title' => 'Free Shipping2', 'price' => '$0.00']
+        ];
+        $carriersRates = $this->model->getShippingMethods(['sku' => 'simple', 'qty' => 1]);
+        $this->assertEquals($expectedRates, $carriersRates);
+    }
+
+    public function testGetShippingMethodsDescending()
+    {
+        $this->prepareShippingMethods();
+
+        $this->priceHelperMock->expects($this->exactly(3))
+                              ->method('currency')
+                              ->willReturn('$0.00');
+
+        $this->shippingAddressMock->expects($this->any())
+            ->method('getGroupedAllShippingRates')
+            ->willReturn([$this->prepareRates()]);
+
+        $this->configMock->expects($this->any())
+                         ->method('getShippingMethodsSortOrder')
+                         ->willReturn(SortOrder::SORT_DESCENDING);
+
+        $expectedRates = [
+            ['title' => 'Free Shipping2', 'price' => '$0.00'],
+            ['title' => 'Free Shipping1', 'price' => '$0.00'],
+            ['title' => 'Free Shipping0', 'price' => '$0.00']
+        ];
+        $carriersRates = $this->model->getShippingMethods(['sku' => 'simple', 'qty' => 1]);
+        $this->assertEquals($expectedRates, $carriersRates);
+    }
+
+    public function prepareRates()
+    {
+        $result = [];
+
+        $rate = $this->getMockBuilder(Rate::class)
+                     ->disableOriginalConstructor()
+                     ->setMethods(['getMethodTitle', 'getPrice'])
+                     ->getMock();
+        $rate->expects($this->exactly(3))
+             ->method('getMethodTitle')
+             ->will($this->onConsecutiveCalls("Free Shipping0", "Free Shipping1", "Free Shipping2", null));
+
+        for ($i = 0; $i <= 2; $i++) {
+            $result[] = $rate;
+        }
+        return $result;
     }
 
     public function testGetShippingMethodsInvalidRequest()

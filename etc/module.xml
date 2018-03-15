@@ -8,6 +8,7 @@
             <module name="Magento_Quote" />
             <module name="Magento_Swatches" />
             <module name="Magento_ConfigurableProduct" />
+            <module name="Magento_Tax" />
         </sequence>
     </module>
 </config>

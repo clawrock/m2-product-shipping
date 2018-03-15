@@ -3,6 +3,7 @@
 namespace ClawRock\ProductShipping\Test\Unit\Helper;
 
 use ClawRock\ProductShipping\Helper\Config;
+use ClawRock\ProductShipping\Model\Config\Source\SortOrder;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Helper\Context;
 use PHPUnit\Framework\TestCase;
@@ -72,5 +73,24 @@ class ConfigTest extends TestCase
                               ->with(Config::CONFIG_COUNTRY_CODE)
                               ->willReturn('PL');
         $this->assertEquals('PL', $this->helper->getCountryCode());
+    }
+
+    public function testGetShippingMethodsSortOrder()
+    {
+        $this->scopeConfigMock->method('getValue')
+                              ->with(Config::CONFIG_METHODS_SORT_ORDER)
+                              ->willReturn(SortOrder::SORT_ASCENDING);
+        $this->assertEquals(
+            SortOrder::SORT_ASCENDING,
+            $this->helper->getShippingMethodsSortOrder()
+        );
+    }
+
+    public function testGetPostcode()
+    {
+        $this->scopeConfigMock->method('getValue')
+                              ->with(Config::CONFIG_POSTCODE)
+                              ->willReturn('9403');
+        $this->assertEquals('9403', $this->helper->getPostcode());
     }
 }

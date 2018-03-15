@@ -19,13 +19,21 @@
                     <label>Destination country</label>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                 </field>
-                <field id="custom_message" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="postcode" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>ZIP/Postal code</label>
+                    <comment>Required for methods using ZIP code like USPS.</comment>
+                </field>
+                <field id="custom_message" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom message</label>
                     <comment>Display message when shipping methods not found.</comment>
                 </field>
-                <field id="options_custom_message" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="options_custom_message" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom message for bundle, configurable products</label>
                     <comment>Display message when shipping methods not found on bundle, configurable PDP.</comment>
+                </field>
+                <field id="sort_order" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort shipping methods</label>
+                    <source_model>ClawRock\ProductShipping\Model\Config\Source\SortOrder</source_model>
                 </field>
             </group>
         </section>
